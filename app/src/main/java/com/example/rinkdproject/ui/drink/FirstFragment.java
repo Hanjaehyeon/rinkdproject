@@ -337,7 +337,7 @@ public class FirstFragment extends Fragment {
 
         HashMap<String,String> childFA = new HashMap<>();
         childFA.put("group","BUBBLE TEA");
-        childFA.put("name", "타로 버블티");
+        childFA.put("name", "타로버블티");
         childListF.add(childFA);
 
         HashMap<String,String> childFB = new HashMap<>();
