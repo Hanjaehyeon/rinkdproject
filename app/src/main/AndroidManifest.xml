@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.rinkdproject">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".tea.fruit.FruitteaActivity"></activity>
+        <activity android:name=".tea.originaltea.OriginalteaActivity" />
+        <activity android:name=".beverage.caramel.CaramelActivity" />
+        <activity android:name=".beverage.sugar.SugarLatteActivity" />
+        <activity android:name=".beverage.grain.GrainActivity" />
+        <activity android:name=".beverage.fruit.FruitLatteActivity" />
+        <activity android:name=".beverage.sweetpotato.SweetpotatoActivity" />
+        <activity android:name=".beverage.greentea.GreenteaActivity" />
+        <activity android:name=".coffee.decaffein.DecaffeinActicity" />
+        <activity android:name=".beverage.choco.ChocolateLatteActivity" />
+        <activity android:name=".coffee.einspanner.EinspannerActivity" />
+        <activity android:name=".coffee.afogatto.AfogatoActivity" />
+        <activity android:name=".coffee.cafuchino.CafuchinoActivity" />
+        <activity android:name=".coffee.cafemocha.MochaActivity" />
+        <activity android:name=".coffee.vanilalatte.VanilaActivity" />
+        <activity android:name=".coffee.caramelmachiato.CaramelActivity" />
+        <activity android:name=".coffee.cafelatte.CafelatteActivity" />
+        <activity android:name=".cafeacticity.Mega.MegaActivity" />
+        <activity android:name=".cafeacticity.Ediya.EdiyaActivity" />
+        <activity android:name=".coffee.americano.AmericanoIceActivity" />
+        <activity android:name=".cafeacticity.Gongcha.GongchaActivity" />
+        <activity
+            android:name=".SpotActivity"
+            android:label="주소 설정" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBD7zkiW6b4s4fAYAkOFyPXCX-EBULiHJY" />
+
+        <activity android:name=".MapActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".RandomActivity" />
+    </application>
+
+</manifest>

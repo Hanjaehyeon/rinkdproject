@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu1"
+        android:title="모든 메뉴"/>
+
+    <item
+        android:id="@+id/menu2"
+        android:title="초콜릿"/>
+
+    <item
+        android:id="@+id/menu3"
+        android:title="민트 초콜릿"/>
+
+    <item
+        android:id="@+id/menu4"
+        android:title="화이트 초콜릿"/>
+
+</menu>
