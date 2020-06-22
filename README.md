@@ -7,6 +7,7 @@
 ## rinkdproject
 
 >인용이다
+하기싫다 ~~하기싫다~~
 
 @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +19,6 @@
         searchView = findViewById ( R.id.searchView );
     }
     
-```java
 @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate ( savedInstanceState );
@@ -28,7 +28,3 @@
         recyclerView = findViewById ( R.id.rv );
         searchView = findViewById ( R.id.searchView );
     }
-```
-    
-    
-    ~~하기싫다~~
