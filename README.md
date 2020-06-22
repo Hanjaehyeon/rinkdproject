@@ -5,3 +5,6 @@
 * Home Fragment
   * 지도
 * Star Fragment
+* Person Fragment
+
+***
