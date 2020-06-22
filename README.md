@@ -28,7 +28,7 @@
         recyclerView = findViewById ( R.id.rv );
         searchView = findViewById ( R.id.searchView );
     }
-    ```
+```
     
     
     ~~하기싫다~~
