@@ -56,7 +56,7 @@ bottom navigation 사용 -> menu 레이아웃에서 사용할 갯수만큼 item 
                         break;
                     }
 ```
-액티비티 xml 파일에는 fragment를 띄울 FrameLayout과 하단 버튼을 띄워줄
+>액티비티 xml 파일에는 fragment를 띄울 FrameLayout과 하단 버튼을 띄워줄
 BottomNavigationView를 생성해준다.
 
 
@@ -81,7 +81,7 @@ BottomNavigationView를 생성해준다.
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 ```
-navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부여한 후 각각의 xml을 Layout에 넣어준다.
+>navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부여한 후 각각의 xml을 Layout에 넣어준다.
 
 
 
@@ -98,6 +98,7 @@ navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부
 
 ### Home Fragmet(지도, 랜덤사진)
 #### 지도
+
 
 버튼을 하나 생성하고 클릭 리스너로 현재 위치 주변에 있는 카페의 위치를 띄워 핀(marker)로 나타내준다.
 
@@ -135,7 +136,8 @@ key("")안에 API 입력
             }
         });  
 ```
-카페 위치에 마커를 띄워줄 메소드를 생성한다.
+>카페 위치에 마커를 띄워줄 메소드를 생성한다.
+
 
 ```java
 public void onPlacesSuccess(final List<Place> places) {
@@ -171,10 +173,11 @@ public void onPlacesSuccess(final List<Place> places) {
 ### Star Fragment(프랜차이즈 목록 띄우기)
 
 
-###### Cafe.java
 
 아이템 클래스(Cafe)와 어댑터 클래스(CafeAdapter)생성
 
 아이템 클래스에 이미지와 이름을 받아올 생성자와 get/set 메소드를 만들어준다.
 
 반환형 주의
+
+###### Cafe.java
