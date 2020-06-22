@@ -22,3 +22,23 @@
         searchView = findViewById ( R.id.searchView );
     }
  ```
+ 
+ ```java
+ @Override
+    protected void onStart() {
+        super.onStart ();
+        if(ref != null){
+            ref.addValueEventListener ( new ValueEventListener () {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists ()){
+                        list=new ArrayList<>();
+
+                        for(DataSnapshot ds : dataSnapshot.getChildren ()){
+                            list.add(ds.getValue (Deal.class));
+                        }
+                        AdapterClass adapterClass = new AdapterClass(list);
+                        recyclerView.setAdapter ( adapterClass );
+                    }
+                }
+```
