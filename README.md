@@ -9,6 +9,8 @@
 >인용이다
 하기싫다 ~~하기싫다~~
 
+
+```java    
 @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate ( savedInstanceState );
@@ -18,13 +20,4 @@
         recyclerView = findViewById ( R.id.rv );
         searchView = findViewById ( R.id.searchView );
     }
-    
-@Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate ( savedInstanceState );
-        setContentView ( R.layout.activity_main );
-
-        ref = FirebaseDatabase.getInstance ().getReference ().child ("Deal").child ( "rana" );
-        recyclerView = findViewById ( R.id.rv );
-        searchView = findViewById ( R.id.searchView );
-    }
+ ```
