@@ -22,6 +22,7 @@
         searchView = findViewById ( R.id.searchView );
     }
  ```
+ 중간에 글자를 넣을 수 있나?
  
  ```java
  @Override
