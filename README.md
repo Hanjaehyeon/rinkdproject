@@ -23,6 +23,7 @@ bottom navigation 사용 -> menu 레이아웃에서 사용할 갯수만큼 item 
         android:title="@string/title_home" />
 ```
 
+
 각각의 버튼에 연결되는 fragment를 4개 생성
 
 
@@ -84,7 +85,7 @@ BottomNavigationView를 생성해준다.
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 ```
-navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부여한 후 각각의 xml을 Layout에 넣어준다.
+**navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부여한 후 각각의 xml을 Layout에 넣어준다.**
 
 
 
@@ -96,6 +97,8 @@ navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 ```
+
+***
 
 ### Home Fragmet(지도, 랜덤사진)
 #### 지도
@@ -166,3 +169,16 @@ public void onPlacesSuccess(final List<Place> places) {
         });
     }
 ```
+
+***
+
+### Star Fragment(프랜차이즈 목록 띄우기)
+
+
+###### Cafe.java
+
+아이템 클래스(Cafe)와 어댑터 클래스(CafeAdapter)생성
+
+아이템 클래스에 이미지와 이름을 받아올 생성자와 get/set 메소드를 만들어준다.
+
+반환형 주의
