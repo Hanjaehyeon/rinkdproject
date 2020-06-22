@@ -59,3 +59,5 @@ bottom navigation 사용 -> menu 레이아웃에서 사용할 갯수만큼 item 
                         break;
                     }
 ```
+액티비티 xml 파일에는 fragment를 띄울 FrameLayout과 하단 버튼을 띄워줄
+BottomNavigationView를 생성해준다.
