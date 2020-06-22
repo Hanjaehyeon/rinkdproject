@@ -24,13 +24,13 @@ bottom navigation 사용 -> menu 레이아웃에서 사용할 갯수만큼 item 
 ```
 
 
-각각의 버튼에 연결되는 fragment를 4개 생성
+>각각의 버튼에 연결되는 fragment를 4개 생성
 
 
-화면을 띄울 액티비티를 생성한 후 4가지 fragment 객체를 선언
+>화면을 띄울 액티비티를 생성한 후 4가지 fragment 객체를 선언
 
 
-메뉴 아이템이 선택될 때 호출될 리스너를 등록
+>메뉴 아이템이 선택될 때 호출될 리스너를 등록
 
 
 
@@ -85,7 +85,7 @@ BottomNavigationView를 생성해준다.
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 ```
-**navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부여한 후 각각의 xml을 Layout에 넣어준다.**
+navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부여한 후 각각의 xml을 Layout에 넣어준다.
 
 
 
