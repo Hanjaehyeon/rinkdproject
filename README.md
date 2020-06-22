@@ -14,7 +14,7 @@
 
 
 
-###### bottom_nav_menu.xml
+##### bottom_nav_menu.xml
 ```java
 <item
         android:id="@+id/navigation_home"
@@ -25,7 +25,7 @@
 
 
 
-###### BottomActivity.java
+##### BottomActivity.java
 ```java
  //5가지 fragment 객체 선언
     private HomeFragment homeFragment = new HomeFragment();
@@ -56,7 +56,7 @@
 
 
 
-###### activity_bottom.xml
+##### activity_bottom.xml
 ```java
 <FrameLayout
         android:id="@+id/frame_layout"
@@ -76,12 +76,12 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 ```
-> 액티비티 xml 파일에는 fragment를 띄울 FrameLayout과 하단 버튼을 띄워줄
+> 액티비티 xml 파일에는 fragment를 띄울 FrameLayout과 하단 버튼을 띄워줄   
 BottomNavigationView를 생성해준다.
 
 
 
-###### mobile_navigation.xml
+##### mobile_navigation.xml
 ```java
 <fragment
         android:id="@+id/navigation_home"
@@ -98,7 +98,7 @@ BottomNavigationView를 생성해준다.
 #### 지도
 
 
-###### MapActivity.java
+##### MapActivity.java
 ```java
 //주변 카페 검색 버튼 리스트
  Button button = (Button) findViewById(R.id.button);
@@ -125,10 +125,12 @@ BottomNavigationView를 생성해준다.
             }
         });  
 ```
-> 버튼을 하나 생성하고 클릭 리스너로 현재 위치 주변에 있는 카페의 위치를 띄워 핀(marker)로 나타내준다.
-> Google Places API키를 생성해야함
+> 버튼을 하나 생성하고 클릭 리스너로 현재 위치 주변에 있는 카페의 위치를 띄워 핀(marker)로 나타내준다.   
 > 현재 위치에서 반경 5000미터 내에 있는 카페의 장소를 검색
-> key("")안에 API 입력
+
+
+> Google Places API키를 생성해야함       
+> key("")안에 API 입력    
 
 
 
@@ -168,7 +170,7 @@ public void onPlacesSuccess(final List<Place> places) {
 ### Star Fragment(프랜차이즈 목록 띄우기)
 
 
-###### Cafe.java
+##### Cafe.java
 
 ```java
 String name;
@@ -192,24 +194,25 @@ String name;
         return intent;
     }
 ```
-> 아이템 클래스(Cafe)와 어댑터 클래스(CafeAdapter)생성
-> 아이템 클래스에 이미지와 이름을 받아올 생성자와 get/set 메소드를 만들어준다.
+> 아이템 클래스(Cafe)와 어댑터 클래스(CafeAdapter)생성    
+> 아이템 클래스에 이미지와 이름을 받아올 생성자와 get/set 메소드를 만들어준다.    
 > 반환형 주의
 
 
 
-###### CafeAdapter
+##### CafeAdapter
 ```java
 public class CafeAdapter extends RecyclerView.Adapter<CafeAdapter.ViewHolder> implements OnCafeItemClickListener {
 ```
-> 리사이클러뷰를 상속받는 어댑터 생성
+> 리사이클러뷰를 상속받는 어댑터 생성    
+> OnCafeItemClickListener 인터페이스 구현    
 
 
 ```java
 ArrayList<Cafe> items = new ArrayList<Cafe>();
 OnCafeItemClickListener listener;
 ```
-> 어댑터 클래스에 아이템들을 받아줄 리스트와 클릭 리스너를 선언해준다.
+> 어댑터 클래스에 아이템들을 받아줄 리스트와 클릭 리스너를 선언해준다.   
 
 
 ```java
@@ -221,6 +224,33 @@ public void onBindViewHolder(@NonNull ViewHolder viewholder, int position) {
 > 아이템 뷰를 ViewHolder에 저장해준다.
 
 
-프랜차이즈 로고 사진을 받아올 이미지뷰와 매장 이름을 표시해줄 텍스트뷰를 선언하고, findViewById를 사용해 xml 레이아웃에서 정의한 뷰를 참조해준다.
+```java
+public static class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView imageView;
+        TextView textView;
 
-아이템 position을 받아와 아이템뷰 클릭 리스너도 설정해준다.
+        public ViewHolder(View itemView, final OnCafeItemClickListener listener){
+            super(itemView);
+
+            textView = itemView.findViewById(R.id.textView);
+            imageView = itemView.findViewById(R.id.imageView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(listener != null){
+                        listener.onItemClick(ViewHolder.this,view,position);
+                    }
+                }
+            });
+        }
+        public void setItem(Cafe item){
+            textView.setText(item.getName());
+            imageView.setImageResource(item.getImage());
+        }
+    }
+```
+> 프랜차이즈 로고 사진을 받아올 이미지뷰와 매장 이름을 표시해줄 텍스트뷰를 선언하고,    
+findViewById를 사용해 xml 레이아웃에서 정의한 뷰를 참조해준다.   
+> 아이템 position을 받아와 아이템뷰 클릭 리스너도 설정해준다.
