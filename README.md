@@ -195,8 +195,7 @@ String name;
     }
 ```
 > 아이템 클래스(Cafe)와 어댑터 클래스(CafeAdapter)생성    
-> 아이템 클래스에 이미지와 이름을 받아올 생성자와 get/set 메소드를 만들어준다.    
-> 반환형 주의
+> 아이템 클래스에 이미지와 이름을 받아올 생성자와 get/set 메소드를 만들어준다. (반환형 )
 
 
 
@@ -252,5 +251,123 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
     }
 ```
 > 프랜차이즈 로고 사진을 받아올 이미지뷰와 매장 이름을 표시해줄 텍스트뷰를 선언하고,    
-findViewById를 사용해 xml 레이아웃에서 정의한 뷰를 참조해준다.   
+findViewById를 사용해 xml 레이아웃에서 정의한 뷰를 참조해준다.
+
+
 > 아이템 position을 받아와 아이템뷰 클릭 리스너도 설정해준다.
+
+
+#### StarFragment.java
+```java
+RecyclerView recyclerView = view.findViewById(R.id.layout1);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        recyclerView.setLayoutManager(layoutManager);
+```
+> 아이템들을 나열해서 보여줄 리사이클러뷰를 선언한 후, 레이아웃에서 정의한 뷰를 참조하고    
+> 그리드 레이아웃을 사용해 한줄에 3개씩 아이템을 나열하도록 설정해준다.
+
+
+```java
+final CafeAdapter adapter = new CafeAdapter();
+```
+> 아이템들을 받아줄 CafeAdapter 선언
+
+
+```java
+adapter.addItem(new Cafe(R.drawable.venti,"더 벤티"));
+        adapter.addItem(new Cafe(R.drawable.bbaek,"빽다방"));
+        adapter.addItem(new Cafe(R.drawable.palgong,"팔공티"));
+        adapter.addItem(new Cafe(R.drawable.chayam,"차얌"));
+        recyclerView.setAdapter(adapter);
+```
+> addItem 메소드를 사용하여 리사이클러뷰에 띄울 어댑터 이미지, 텍스트뷰를 저장해준다.    
+> 이때 이미지는 drawable에 저장한 후 불러온다.
+
+
+```java
+adapter.setOnItemClickListener(new OnCafeItemClickListener() {
+            @Override
+            public void onItemClick(CafeAdapter.ViewHolder holder, View view, int position) {
+                Cafe item = adapter.getItem(position);
+                switch (position){
+                    case 0:
+                        Intent intent = new Intent(getActivity(), GongchaActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        Intent intent2 = new Intent(getActivity(), EdiyaActivity.class);
+                        startActivity(intent2);
+                        break
+```
+> switch문을 이용해 클릭 이벤트를 만들어 아이템을 클릭했을 때 해당 카페의 activity로 이동하도록 설정
+
+> position으로 아이템 구분   
+> Intent 사용하여 activity로 전환
+
+
+```java
+public interface OnCafeItemClickListener {
+    public void onItemClick(CafeAdapter.ViewHolder holder, View view, int position);
+}
+```
+> OncafeItemClickListener 인터페이스 생성
+
+
+#### Layout1.xml
+
+
+```java
+<androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#FFFFFFFF"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="90dp" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+```
+> 프랜차이즈 로고 사진과 카페 이름을 띄울 아이템 레이아웃 생성
+
+> CardView를 이용해 이미지뷰와 텍스트뷰를 깔끔하게 정리   
+> 이때, 이미지와 텍스트는 LinearLayout vertical로 정의
+
+
+#### fragment_star.xml
+
+
+```java
+<FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+```
+> 프래그먼트 xml 레이아웃에는 FrameLayout 안에 아이템을 나열해줄    
+> 리사이클러뷰를 생성한다.
