@@ -99,7 +99,6 @@
 ## 코드
 
 
-### 홈 카테고리
 
 #### Google API키 발급받기
 
@@ -282,6 +281,11 @@ BottomNavigationView를 생성해준다.
 
 
 ##### MapActivity.java
+
+* Button을 하나 생성하고, ClickListener로 현재 위치 주변의 카페 위치를 Marker로 나타내준다.    
+* Google Places API키를 생성해야 한다.    
+* 현재 위치에서 반경 5000미터 내 카페 장소를 검색해준다.   
+* key("")안에 발급받은 API를 입력한다.
 ```java
 //주변 카페 검색 버튼 리스트
  Button button = (Button) findViewById(R.id.button);
@@ -308,13 +312,8 @@ BottomNavigationView를 생성해준다.
             }
         });  
 ```
-> 버튼을 하나 생성하고 클릭 리스너로 현재 위치 주변에 있는 카페의 위치를 띄워 핀(marker)로 나타내준다.   
-> 현재 위치에서 반경 5000미터 내에 있는 카페의 장소를 검색
 
-
-> Google Places API키를 생성해야함       
-> key("")안에 API 입력    
-
+* 검색된 카페 위치에 Marker를 띄워줄 메소드를 생성한다.
 
 
 ```java
@@ -345,15 +344,16 @@ public void onPlacesSuccess(final List<Place> places) {
         });
     }
 ```
-> 카페 위치에 마커를 띄워줄 메소드를 생성한다.
 
 
 ***
 
-### Star Fragment(프랜차이즈 목록 띄우기)
-
+### 프랜차이즈 카테고리(프랜차이즈 목록 띄우기)
 
 ##### Cafe.java
+
+* 아이템 클래스(Cafe.java)와 어댑터 클래스(CafeAdapter.java)를 생성한다.    
+* 아이템 클래스에 이미지, 이름을 받아올 생성자와 get/set 메소드를 만들어준다. (*반환형 주의*)
 
 ```java
 String name;
@@ -377,33 +377,43 @@ String name;
         return intent;
     }
 ```
-> 아이템 클래스(Cafe)와 어댑터 클래스(CafeAdapter)생성    
-> 아이템 클래스에 이미지와 이름을 받아올 생성자와 get/set 메소드를 만들어준다. (반환형 주의)
-
 
 
 ##### CafeAdapter
+
+* recyclerView를 상속받기 전에, build.gradle > Module:app에 다음과 같이 코드를 추가하고 Sync해준다.
+
+```
+implementation 'androidx.recyclerview:recyclerview:1.1.0'
+```
+
+* recyclerView를 상속받는 Adapter를 생성해준다.   
+* OnCafeItemClickListener 인터페이스를 구현한다.
+
+
 ```java
 public class CafeAdapter extends RecyclerView.Adapter<CafeAdapter.ViewHolder> implements OnCafeItemClickListener {
-```
-> 리사이클러뷰를 상속받는 어댑터 생성    
-> OnCafeItemClickListener 인터페이스 구현    
+``` 
+
+* Adapter 클래스에 아이템들을 받아줄 ArrayList와 CilckListener를 선언해준다.
 
 
 ```java
 ArrayList<Cafe> items = new ArrayList<Cafe>();
 OnCafeItemClickListener listener;
-```
-> 어댑터 클래스에 아이템들을 받아줄 리스트와 클릭 리스너를 선언해준다.   
+``` 
 
-
+* 아이템 뷰를 ViewHolder에 저장해준다.     
 ```java
 public void onBindViewHolder(@NonNull ViewHolder viewholder, int position) {
         Cafe item = items.get(position);
         viewholder.setItem(item);
     }
 ```
-> 아이템 뷰를 ViewHolder에 저장해준다.
+
+* 프랜차이즈 로고 사진을 받아올 imageView와 매장 이름을 표시해줄 TextView를 선언한다.    
+* findViewById를 사용해 xml레이아웃에서 정의한 view를 참조해준다.   
+* 아이템 position을 받아와 아이템 뷰 ClickListener도 설정해준다.
 
 
 ```java
@@ -433,28 +443,34 @@ public static class ViewHolder extends RecyclerView.ViewHolder{
         }
     }
 ```
-> 프랜차이즈 로고 사진을 받아올 이미지뷰와 매장 이름을 표시해줄 텍스트뷰를 선언하고,    
-findViewById를 사용해 xml 레이아웃에서 정의한 뷰를 참조해준다.
 
 
-> 아이템 position을 받아와 아이템뷰 클릭 리스너도 설정해준다.
 
 
 #### StarFragment.java
+
+* 아이템들을 나열해서 보여줄 recyclerView를 선언한 후 레이아웃에서 정의한 view를 참조한다.    
+* GridLayout을 사용해 한줄에 3개씩 아이템을 나열하도록 설정해준다.
+
+
 ```java
 RecyclerView recyclerView = view.findViewById(R.id.layout1);
 
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
         recyclerView.setLayoutManager(layoutManager);
 ```
-> 아이템들을 나열해서 보여줄 리사이클러뷰를 선언한 후, 레이아웃에서 정의한 뷰를 참조하고    
-> 그리드 레이아웃을 사용해 한줄에 3개씩 아이템을 나열하도록 설정해준다.
+
+
+* 아이템들을 받아줄 CafeAdapter를 선언한다.
 
 
 ```java
 final CafeAdapter adapter = new CafeAdapter();
 ```
-> 아이템들을 받아줄 CafeAdapter 선언
+
+
+* addItem 메소드를 사용하여 recyclerView에 띄울 Adapter에 image,textview를 저장해준다.    
+* 이때 카페 로고의 이미지는 drawable에 저장한 후 불러온다.
 
 
 ```java
@@ -464,8 +480,11 @@ adapter.addItem(new Cafe(R.drawable.venti,"더 벤티"));
         adapter.addItem(new Cafe(R.drawable.chayam,"차얌"));
         recyclerView.setAdapter(adapter);
 ```
-> addItem 메소드를 사용하여 리사이클러뷰에 띄울 어댑터 이미지, 텍스트뷰를 저장해준다.    
-> 이때 이미지는 drawable에 저장한 후 불러온다.
+
+
+* switch문을 사용해 ClickEvent를 만들고 아이템을 클릭했을 때 해당 Cafe.java Activity로 이동하도록 설정한다.    
+* position으로 아이템 구분   
+* Intent 사용하여 Activity로 전환한다.
 
 
 ```java
@@ -483,21 +502,21 @@ adapter.setOnItemClickListener(new OnCafeItemClickListener() {
                         startActivity(intent2);
                         break
 ```
-> switch문을 이용해 클릭 이벤트를 만들어 아이템을 클릭했을 때 해당 카페의 activity로 이동하도록 설정
 
-> position으로 아이템 구분   
-> Intent 사용하여 activity로 전환
-
-
+* OnCafeItemClickListener 인터페이스를 생성한다.
 ```java
 public interface OnCafeItemClickListener {
     public void onItemClick(CafeAdapter.ViewHolder holder, View view, int position);
 }
 ```
-> OncafeItemClickListener 인터페이스 생성
+
 
 
 #### Layout1.xml
+
+* 프랜차이즈 로고 사진과 카페 이름을 띄워줄 아이템 레이아웃을 생성한다.   
+* CardView를 사용해 imageview와 textview를 깔끔하게 정리한다.    
+* 이때 image와 text는 LinearLayout vertical로 정의한다.
 
 
 ```java
@@ -531,13 +550,11 @@ public interface OnCafeItemClickListener {
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 ```
-> 프랜차이즈 로고 사진과 카페 이름을 띄울 아이템 레이아웃 생성
-
-> CardView를 이용해 이미지뷰와 텍스트뷰를 깔끔하게 정리   
-> 이때, 이미지와 텍스트는 LinearLayout vertical로 정의
 
 
 #### fragment_star.xml
+
+* Fragment의 xml 레이아웃에는 FrameLayout 안에 아이템을 나열해줄 recyclerview를 생성한다.
 
 
 ```java
@@ -552,16 +569,19 @@ public interface OnCafeItemClickListener {
 
     </FrameLayout>
 ```
-> 프래그먼트 xml 레이아웃에는 FrameLayout 안에 아이템을 나열해줄    
-> 리사이클러뷰를 생성한다.
 
 
 ***
 
-### Person Fragment (음료 필터 검색)
+### 검색 카테고리 (음료 필터 검색)
 
 
 #### ListViewItem.java
+
+* iconDrawable은 이미지, title은 음료이름, desc은 카페이름이며 price는 가격이다.   
+* ListView의 아이템에 표시될 데이터 클래스를 정의한다.    
+* 이미지, 함수 아이템에 get/set 메소드를 지정해준다.
+
 
 ```java
 private Drawable iconDrawable ;
@@ -597,13 +617,14 @@ private Drawable iconDrawable ;
         priceStr=price ;
     }
 ```
-> iconDrawable은 이미지, title은 음료이름, desc은 카페이름, price는 가격
 
-> ListView의 아이템에 표시 될 데이터 클래스를 정의    
-> 이미지, 함수 아이템에 get/set 메소드를 만들어준다.
 
 
 #### listview_item.xml
+
+* ListView 아이템에 대한 화면을 구성한다.
+
+
 ```java
 <LinearLayout
         android:layout_width="match_parent"
@@ -653,8 +674,6 @@ private Drawable iconDrawable ;
     </LinearLayout>
 ```
 
-> ListView 아이템에 대한 화면을 구성한다.
-
 
 
 #### ListViewAdapter.java
@@ -664,6 +683,8 @@ Adapter가 필터링 기능을 사용할 수 있게 하기위한 필수조건은
 Filterable 인터페이스를 implements 해야한다.
 
 Filterable 인터페이스는 필터링 기능이 필요한 곳에서 사용된다.
+
+* Filterable 인터페이스를 구현한다.
 
 
 ```java
@@ -679,15 +700,19 @@ public class ListViewAdapter extends BaseAdapter implements Filterable {
     public ListViewAdapter() {
     }
 ```
->  Filterable 인터페이스를 구현한다.    
 
+
+* Adapter에 사용되는 데이터의 갯수를 리턴해준다.
 ```java
 @Override
     public int getCount() {
         return filteredItemList.size();
     }
 ```
-> Adapter에 사용되는 데이터의 개수를 리턴한다.     
+
+
+* position에 위치한 데이터를 화면에 출력하는데 사용될 View를 리턴한다.    
+
 
 ```java
 @Override
@@ -695,31 +720,35 @@ public class ListViewAdapter extends BaseAdapter implements Filterable {
         final int pos = position;
         final Context context = parent.getContext();
 ```
-> position에 위치한 데이터를 화면에 출력하는데 사용될 View를 리턴한다.     
 
+* listview_item.xml의 Layout을 inflate   
+* inflate는 xml로 정의된 view를 객체화 시킨다는 뜻이다.
 ```java
 if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listview_item, parent, false);
         }
 ```
-> listview_item.xml의 Layout을 inflate.    
-> inflate는 xml로 정의된 view를 객체화 시킨다는 뜻이다.
 
 
+* 화면에 표시될(Layout이 inflate된) View로 부터 위젯에 대한 참조를 획득한다.
 ```java
         ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView1) ;
         TextView titleTextView = (TextView) convertView.findViewById(R.id.textView1) ;
         TextView descTextView = (TextView) convertView.findViewById(R.id.textView2) ;
         TextView pirceTextView = (TextView) convertView.findViewById(R.id.textView3) ;
 ```
-> 화면에 표시될(Layout이 inflate된) View로 부터 위젯에 대한 참조를 획득한다.
+
+
+* filteredItemList에서 position에 위치한 데이터를 받아온다.
 
 
 ```java
 ListViewItem listViewItem = filteredItemList.get(position);
 ```
-> filteredItemList에서 position에 위치한 데이터를 받아온다.
+
+
+* 아이템 안에 데이터를 각 위젯에 반영한다.
 
 
 ```java
@@ -731,7 +760,9 @@ iconImageView.setImageDrawable(listViewItem.getIcon());
         return convertView;
     }
 ```
-> 아이템 안에 데이터를 각 위젯에 반영한다.
+
+
+* 지정한 위치(position)에 있는 데이터와 관계된 아이템을 가져온다.
 
 
 ```java
@@ -740,16 +771,18 @@ iconImageView.setImageDrawable(listViewItem.getIcon());
         return position;
     }
 ```
-> 지정한 위치(position)에 있는 데이터와 관계된 아이템을 가져온다.
 
 
+* 지정한 위치(position)에 있는 데이터를 받아온다.
 ```java
 @Override
     public Object getItem(int position) {
         return filteredItemList.get(position);
     }
 ```
-> 지정한 위치(position)에 있는 데이터를 받아온다.
+
+
+* 아이템 데이터를 추가하기 위해 함수를 추가한다.
 
 
 ```java
@@ -764,9 +797,8 @@ public void addItem(Drawable icon, String title, String desc, String price) {
         listViewItemList.add(item);
     }
 ```
-> 아이템 데이터를 추가하기 위해 함수를 추가한다.
 
-
+* 위에서 Filterable 인터페이스를 implements 했으므로, Filterable 인터페이스의 getFilter() 함수를 오버라이드 한다.
 ```java
 public Filter getFilter() {
         if (listFilter == null) {
@@ -776,8 +808,9 @@ public Filter getFilter() {
         return listFilter;
     }
 ```
-> 위에서 Filterable 인터페이스를 implements 했으므로, Filterable 인터페이스의   
-> getFilter() 함수를 오버라이드 한다.
+
+
+* Filter클래스의 역할에 따라, 커스텀 Adapter 내부에 커스텀 Filter 클래스를 정의하고 구현한다.
 
 
 ```java
@@ -807,7 +840,10 @@ private class ListFilter extends Filter {
             return results;
         }
 ```
-> Filter클래스의 역할에 따라, 커스텀 Adapter 내부에 커스텀 Filter 클래스를 정의하고 구현한다.
+
+
+
+* 이렇게 Adapter 클래스 구현 끝
 
 
 ```java
@@ -825,11 +861,16 @@ private class ListFilter extends Filter {
     }
 }
 ```
-> 이렇게 Adapter 클래스 구현 끝
+
 
 
 
 #### drink_search.xml
+
+* ListView의 "textFilterEnabled"속성을 "true"로 지정해줘야한다.    
+* 지정해줘야만 setFilterText() 함수를 사용해 필터링 기능을 사용할 수 있다.
+
+
 ```java
 <TextView
         android:layout_width="wrap_content"
@@ -852,12 +893,13 @@ private class ListFilter extends Filter {
         android:textFilterEnabled="true"
         android:id="@+id/listview1"/>
 ```
-> ListView의 "textFilterEnabled"속성을 "true"로 지정해줘야한다.    
-> 지정해줘야만 setFilterText() 함수를 사용해 필터링 기능을 사용할 수 있다.
 
 
 
 #### PersonFragment.java
+* 위에서 정의한 Adapter를 생성하여 ListView에 지정하는 코드를 작성한다.
+
+
 ```java
 public class PersonFragment extends Fragment {
     ListView listView=null;
@@ -881,16 +923,15 @@ public class PersonFragment extends Fragment {
         listView=(ListView)view.findViewById(R.id.listview1);
         listView.setAdapter(adapter);
 ```
-> 위에서 정의한 Adapter를 생성하여 ListView에 지정하는 코드를 작성한다.
 
 
-
+* 작성 전에, 밑의 사진처럼 이미지 데이터를 추가해야 한다.    
+* ListView 아이템의 ImageView에 들어갈 이미지를 res > drawable에 추가한다.
 <img width="600" height="300" alt="drawable" src="https://user-images.githubusercontent.com/62926717/85353425-2831a580-b543-11ea-99cb-271af1448e48.PNG">
 
-> 작성 전에, 이미지 데이터를 추가해야 한다.   
-> ListView 아이템의 ImageView에 들어갈 이미지를 res > drawable에 추가한다.
 
 
+* 추가한 데이터를 형식에 맞게끔 호출해준다.
 ```java
 adapter.addItem(ContextCompat.getDrawable(getContext(), R.drawable.angelinus1),
                 "아메리치노 흑당라떼", "엔제리너스", "6200") ;
@@ -899,7 +940,11 @@ adapter.addItem(ContextCompat.getDrawable(getContext(), R.drawable.angelinus1),
         adapter.addItem(ContextCompat.getDrawable(getContext(), R.drawable.angelinus3),
                 "오트밀 라떼", "엔제리너스", "5400") ;
 ```
-> 추가한 데이터를 형식에 맞게끔 호출해준다.    
+
+
+* EditText를 통해 ListView의 아이템을 필터링 할 텍스트를 입력받은 다음    
+* ListView의 setFilterText() 함수를 호출해 필터링을 수행하도록 한다.
+
 
 ```java
 EditText editTextFilter=(EditText)view.findViewById(R.id.editTextFilter);
@@ -921,5 +966,5 @@ EditText editTextFilter=(EditText)view.findViewById(R.id.editTextFilter);
             }
         });
 ```
-> EditText를 통해 ListView의 아이템을 필터링 할 텍스트를 입력받은 다음,    
-> ListView의 setFilterText() 함수를 호출해 필터링을 수행하도록 한다.
+
+***
