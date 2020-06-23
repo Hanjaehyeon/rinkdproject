@@ -762,9 +762,7 @@ public class DrinkFragment extends Fragment {
 #### FirstFragment.java
 
 * ICE탭을 눌렀을 때 화면에 나타나는 화면을 위한 Fragment이다. (*SecondFragment.java 파일도 이와 같다.*)      
-* 이 화면에서는 ExpandableListView를 사용하여 부모 리스트에 속한 자식 리스트를 만들어주어
-
-많은 카테고리를 접었다 펼 수 있는 기능을 사용한다.
+* 이 화면에서는 ExpandableListView를 사용하여 부모 리스트에 속한 자식 리스트를 만들어주어 많은 카테고리를 접었다 펼 수 있는 기능을 사용한다.
 
 * 부모,자식 메뉴들을 담아줄 List들을 각각 선언한 후, 부모 리스트에 들어갈 요소들을 추가한다.   
 * 이때 List는 HashMap 클래스를 사용한다.   
@@ -866,6 +864,8 @@ public class FirstFragment extends Fragment {
 * 자식 요소 뷰 를 클릭하면 해당 음료 Activity로 전환하는 Listener를 생성한다.   
 * 이때 GroupPosition 별로 switch문을 작성한다.   
 * 작성한 부모 그룹 요소를 바탕으로 음료별 Activity를 생성한다.
+
+
 ![image](https://user-images.githubusercontent.com/62926717/85389919-0ce68a80-b583-11ea-89f9-68bb15adbf85.png)
 
 
@@ -890,7 +890,9 @@ SimpleExpandableListAdapter adapter  = new SimpleExpandableListAdapter(
 
 * 아메리카노 Activity 안에서도 아메리카노와 콜드브루를 나누어준다.   
 * 예를 들어, 과일라떼 Activity로 본다면 '딸기','사과','복숭아' 등 과일의 종류별로 Fragment를 만들어준다.    
-* TabLayout을 생성해 Viewpager로 나타낸다.   
+* TabLayout을 생성해 Viewpager로 나타낸다.
+
+
 ![image](https://user-images.githubusercontent.com/62926717/85390148-5afb8e00-b583-11ea-8f17-1356168b2fe3.png)
 
 
