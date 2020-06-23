@@ -145,9 +145,7 @@
 <img width="264" alt="googleApi11" src="https://user-images.githubusercontent.com/62926717/85370772-31823880-b56a-11ea-884f-b2c886530f04.PNG">
 
 
-10. SHA-1 인증서 지문을 받아오기 위해
-
-윈도우 키 + R을 눌러 cmd을 입력하고 명령 프롬프트 창을 불러온다.    
+10. SHA-1 인증서 지문을 받아오기 위해 윈도우 키 + R을 눌러 cmd을 입력하고 명령 프롬프트 창을 불러온다.    
 <img width="300" alt="googleApi12" src="https://user-images.githubusercontent.com/62926717/85370892-668e8b00-b56a-11ea-83c6-74cca4a62e9b.PNG">
 
 
@@ -188,7 +186,7 @@ https://webnautes.tistory.com/647
 ***
 
 
-### 하단버튼
+#### 하단버튼
 
 ##### bottom_nav_menu.xml
 
@@ -206,6 +204,10 @@ https://webnautes.tistory.com/647
 
 
 ##### BottomActivity.java
+
+* 각각의 Button에 연결되는 4개의 Fragment를 생성한다.
+* 화면을 띄울 Activity를 생성한 후, Fragment 객체를 선언한다.
+* menu 아이템이 선택될 때 호출될 Listener를 등록한다.
 ```java
  //5가지 fragment 객체 선언
     private HomeFragment homeFragment = new HomeFragment();
@@ -230,13 +232,13 @@ https://webnautes.tistory.com/647
                         break;
                     }
 ```
-> 각각의 버튼에 연결되는 fragment를 4개 생성   
-> 화면을 띄울 액티비티를 생성한 후 4가지 fragment 객체를 선언   
-> 메뉴 아이템이 선택될 때 호출될 리스너를 등록
 
 
 
 ##### activity_bottom.xml
+
+* activity_bottom.xml 파일에는 Fragment를 띄울 FrameLayout과 하단 Button을 띄워줄    
+BottomNavigationView를 생성해준다.
 ```java
 <FrameLayout
         android:id="@+id/frame_layout"
@@ -256,12 +258,13 @@ https://webnautes.tistory.com/647
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 ```
-> 액티비티 xml 파일에는 fragment를 띄울 FrameLayout과 하단 버튼을 띄워줄   
-BottomNavigationView를 생성해준다.
 
 
 
 ##### mobile_navigation.xml
+
+* navigation 레이아웃에서 5가지 아이템의 Fragment를 선언하여 id를 부여한 후    
+각각의 xml을 Layout에 넣어준다.
 ```java
 <fragment
         android:id="@+id/navigation_home"
@@ -269,7 +272,7 @@ BottomNavigationView를 생성해준다.
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 ```
-> navigation 레이아웃에서 5가지 item의 fragment를 선언하여 id를 부여한 후 각각의 xml을 Layout에 넣어준다.
+
 
 
 ***
