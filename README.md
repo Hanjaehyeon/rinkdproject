@@ -286,7 +286,7 @@ BottomNavigationView를 생성해준다.
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-* gradle : app에 다음 코드를 Sync한다.
+* build.gradle > Module:app에 다음 코드를 Sync한다.
 
 ```
 implementation 'com.google.android.gms:play-services-maps:17.0.0'
@@ -1532,7 +1532,7 @@ private class PagerAdapter extends FragmentPagerAdapter {
 #### Drink.java
 #### DrinkAdapter.java
 
-* 이 두가지의 클래스를 생성한다.
+* 이 두 개의 클래스를 생성한다.
 
 
 
@@ -1635,7 +1635,7 @@ public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
     }
 ```
 
-* gradle:app에 다음 코드를 추가한다.
+* build.gradle > Module:app에 다음 코드를 추가한다.
 ```
 implementation 'com.github.bumptech.glide:glide:4.10.0'
 annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
