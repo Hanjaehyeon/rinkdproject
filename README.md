@@ -633,6 +633,24 @@ annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 <img width="600" alt="firebase15" src="https://user-images.githubusercontent.com/62926717/85385794-add24700-b57d-11ea-9ca4-71ca1e009fcb.PNG">
 
 
+14. 이미지 파일을 첨부할 수 있는 Storage를 클릭해 '시작하기'를 클릭한다.
+<img width="400" alt="firebase16" src="https://user-images.githubusercontent.com/62926717/85386197-3fda4f80-b57e-11ea-93f8-e86136562d76.PNG">
+
+
+15. Storage의 rule(규칙)으로 들어가 다음과 같이 코드를 수정한다.
+<img width="400" alt="firebase20" src="https://user-images.githubusercontent.com/62926717/85386374-7fa13700-b57e-11ea-9e73-a300ed27d7ff.PNG">
+
+
+16. '파일 업로드'를 눌러 PC안에 있는 이미지 하나를 선택하면 다음과 같이 파일을 업로드한다.
+<img width="400" alt="firebase22" src="https://user-images.githubusercontent.com/62926717/85386522-ad867b80-b57e-11ea-8a07-0160cdee05c7.PNG">
+
+
+17. 파일을 클릭하면 사진의 이미지와 주소를 불러올 수 있다.
+<img width="800" alt="firebase23" src="https://user-images.githubusercontent.com/62926717/85386608-c858f000-b57e-11ea-8c36-28d740e802fe.PNG">
+
+
+
+
 ***
 
 ### 검색 카테고리 (음료 필터 검색)
