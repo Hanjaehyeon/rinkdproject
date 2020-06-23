@@ -701,5 +701,42 @@ public class PersonFragment extends Fragment {
 > 위에서 정의한 Adapter를 생성하여 ListView에 지정하는 코드를 작성한다.
 
 
+
+<img width="600" height="300" alt="drawable" src="https://user-images.githubusercontent.com/62926717/85353425-2831a580-b543-11ea-99cb-271af1448e48.PNG">
+
 > 작성 전에, 이미지 데이터를 추가해야 한다.   
 > ListView 아이템의 ImageView에 들어갈 이미지를 res > drawable에 추가한다.
+
+
+```java
+adapter.addItem(ContextCompat.getDrawable(getContext(), R.drawable.angelinus1),
+                "아메리치노 흑당라떼", "엔제리너스", "6200") ;
+        adapter.addItem(ContextCompat.getDrawable(getContext(), R.drawable.angelinus2),
+                "아메리치노 흑당", "엔제리너스", "5400") ;
+        adapter.addItem(ContextCompat.getDrawable(getContext(), R.drawable.angelinus3),
+                "오트밀 라떼", "엔제리너스", "5400") ;
+```
+> 추가한 데이터를 형식에 맞게끔 호출해준다.    
+
+```java
+EditText editTextFilter=(EditText)view.findViewById(R.id.editTextFilter);
+        editTextFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable edit) {
+                String filterText=edit.toString();
+                ((ListViewAdapter)listView.getAdapter()).getFilter().filter(filterText);
+            }
+        });
+```
+> EditText를 통해 ListView의 아이템을 필터링 할 텍스트를 입력받은 다음,    
+> ListView의 setFilterText() 함수를 호출해 필터링을 수행하도록 한다.
