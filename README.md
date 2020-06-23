@@ -183,7 +183,7 @@ https://webnautes.tistory.com/647
 
 #### 하단버튼 만들기
 
-##### bottom_nav_menu.xml
+#### bottom_nav_menu.xml
 
 
 * bottom navigation을 사용한다.
@@ -198,7 +198,7 @@ https://webnautes.tistory.com/647
 
 
 
-##### BottomActivity.java
+#### BottomActivity.java
 
 * 각각의 Button에 연결되는 4개의 Fragment를 생성한다.
 * 화면을 띄울 Activity를 생성한 후, Fragment 객체를 선언한다.
@@ -230,7 +230,7 @@ https://webnautes.tistory.com/647
 
 
 
-##### activity_bottom.xml
+#### activity_bottom.xml
 
 * activity_bottom.xml 파일에는 Fragment를 띄울 FrameLayout과 하단 Button을 띄워줄    
 BottomNavigationView를 생성해준다.
@@ -256,7 +256,7 @@ BottomNavigationView를 생성해준다.
 
 
 
-##### mobile_navigation.xml
+#### mobile_navigation.xml
 
 * navigation 레이아웃에서 5가지 아이템의 Fragment를 선언하여 id를 부여한 후    
 각각의 xml을 Layout에 넣어준다.
@@ -269,6 +269,35 @@ BottomNavigationView를 생성해준다.
 ```
 
 
+#### 타이틀바 색상 바꾸기
+
+#### style.xml
+* 상태바 및 타이블바 등 App을 디자인하는데 필요한 코드들이 모여있다.
+```java
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+
+         액션바(타이틀바)의 색상을 결정
+        <item name="colorPrimary">#FFD4DF</item> 
+         상태바(시간 및 LTE 보여주는 바)의 생상을 결정   
+        <item name="colorPrimaryDark">#FFB6C1</item> 
+         강조 색상을 표시함
+        <item name="colorAccent">#dcdcdc</item> 
+    </style>
+```
+
+
+#### 안드로이드 런처 아이콘 변경하기
+
+#### ic_launcher_drink
+```java
+   <background android:drawable="@color/ic_launcher_drink_background"/>  
+   <foreground android:drawable="@mipmap/ic_launcher_drink_foreground"/>
+```
+
+
 ***
 
 본격적으로 차근차근히 코드를 구현해보자.
@@ -276,7 +305,7 @@ BottomNavigationView를 생성해준다.
 
 ***
 
-### 홈 카테고리(지도, 추천 음료)
+### 홈 카테고리(지도)
 #### 지도
 
 * Manifest에 다음 권한(위치 정보 접근을 위한 퍼미션)을 등록한다.
@@ -294,7 +323,7 @@ implementation 'com.google.android.gms:play-services-location:17.0.0'
 ```
 
 
-##### MapActivity.java
+#### MapActivity.java
 * 지도'만' 코드가 너무 긴 관계로 주석으로 설명을 대신한다.
 ```java
 public class MapActivity extends AppCompatActivity
@@ -876,13 +905,139 @@ public class MapActivity extends AppCompatActivity
     }
 }
 ```
+***
+
+### 홈 카테고리(추천 음료)
+
+#### button_background.xml
+* 버튼의 내부 색상 및 테두리 색상을 설정하고 모서리를 둥글게 만드는 등 버튼을 커스텀 한다.
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+
+    10dp 만큼 
+    android:padding="10dp"
+
+    각 모서리에 
+    android:shape="rectangle" >
+     
+    버튼 내부색을 설정한다.
+    <solid android:color="#FFE3EE" />
+
+    사각형의 각 모서리 부분을 둥글게 만든다.
+    <corners
+        
+        //좌측 하단에 12dp에 해당하는만큼 둥글게 만듦
+        android:bottomLeftRadius="12dp"
+        
+        //우측 하단에 12dp에 해당하는만큼 둥글게 만듦
+        android:bottomRightRadius="12dp"
+
+        //좌측 상단에 12dp에 해당하는만큼 둥글게 만듦
+        android:topLeftRadius="12dp"
+
+        //우측 상단에 12dp에 해당하는만큼 둥글게 만듦
+        android:topRightRadius="12dp" />
+
+    테두리 색과 두께 지정
+    <stroke
+        android:width="1dp"
+        android:color="#FFE3EE" />
+</shape>
+```
+
+#### fagment_home.xml
+* 지도 Activity로 넘어가는 버튼, 랜덤 음료를 보여주는 Activity로 넘어가는 페이지로 넘어간다.
+```java
+// 지도 페이지로 넘어가는 버튼 
+        <Button
+            android:id="@+id/mapbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:background="@drawable/mapmapbutton"
+            android:text="확인해봐"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        // 10장의 랜덤 음료를 보여주는 페이지로 넘어감
+        <Button
+            android:id="@+id/searchbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="23dp"
+            android:background="@drawable/mapmapbutton"
+            android:text="결정해봐"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+   //View FLipper는 자동 페이징과 탭해서 뷰를 넘기는 분야를 가진다.
+   //여기서 자동 페이징 기능은 처음 터치된 곳의 이벤트 값과 나중에 선택된 곳의 이벤트 값의 차이를 계산하여 띄우는 것이다. 
+
+    <ViewFlipper
+        android:id="@+id/flipper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </ViewFlipper>
+```
+
+
+#### HomeFragment.java
+* MapActivity.java와 연결 되어있다.
+
+```java
+Button btn_go =(Button)rootview.findViewById(R.id.mapbutton);
+
+        //mapbutton 클릭 시 map activity로 이동하여 현재 나의 위치 및 카페들을 띄워준다. 
+        btn_go1.setOnClickListener(
+                new Button.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), DrinkSearch.class);
+
+                        startActivity(intent);
+                    }
+                }
+        );
+
+        //ViewFlipper 객체를 참조한다.
+        final ViewFlipper flipper = (ViewFlipper)rootview.findViewById(R.id.flipper);
+
+
+        //onClick속성이 지정된 View가 클릭되었을 때 자동으로 호출되는 메소드.(이전의 이미지로 바뀜)
+        Button btn_previous = (Button)rootview.findViewById(R.id.btn_previous);
+        btn_previous.setOnClickListener(
+                new ImageButton.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(getActivity(), HomeFragment.class);
+
+                        //이전 View로 교체
+                        flipper.showPrevious();                 
+                    }
+                }
+
+        );
+
+        //onClick속성이 지정된 View가 클릭되었을 때 자동으로 호출되는 메소드.(이후의 이미지로 바뀜)
+        Button btn_next = (Button)rootview.findViewById(R.id.btn_next);
+        btn_next.setOnClickListener(
+                new ImageButton.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent(getActivity(), HomeFragment.class);
+
+                         //다음 View로 교체
+                        flipper.showNext();   
+```
 
 
 ***
 
 ### 프랜차이즈 카테고리(프랜차이즈 목록 띄우기)
 
-##### Cafe.java
+#### Cafe.java
 
 * 아이템 클래스(Cafe.java)와 어댑터 클래스(CafeAdapter.java)를 생성한다.    
 * 아이템 클래스에 이미지, 이름을 받아올 생성자와 get/set 메소드를 만들어준다. (*반환형 주의*)
@@ -911,7 +1066,7 @@ String name;
 ```
 
 
-##### CafeAdapter
+#### CafeAdapter
 
 * recyclerView를 상속받기 전에, build.gradle > Module:app에 다음과 같이 코드를 추가하고 Sync해준다.
 
@@ -2329,3 +2484,19 @@ EditText editTextFilter=(EditText)view.findViewById(R.id.editTextFilter);
 ```
 
 ***
+
+### 구현 사진
+
+***
+
+### 맡은 부분
+
+```
+201821093 한재현
+
+: 검색 
+
+
+### 개선 방안
+
+### 프로젝트 소감
