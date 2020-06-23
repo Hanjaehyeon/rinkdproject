@@ -371,3 +371,335 @@ public interface OnCafeItemClickListener {
 ```
 > 프래그먼트 xml 레이아웃에는 FrameLayout 안에 아이템을 나열해줄    
 > 리사이클러뷰를 생성한다.
+
+
+***
+
+### Person Fragment (음료 필터 검색)
+
+
+#### ListViewItem.java
+
+```java
+private Drawable iconDrawable ;
+    private String titleStr ;
+    private String descStr ;
+    private String priceStr;
+
+    public Drawable getIcon() {
+        return this.iconDrawable ;
+    }
+    public void setIcon(Drawable icon) {
+        iconDrawable = icon ;
+    }
+
+    public String getTitle() {
+        return this.titleStr ;
+    }
+    public void setTitle(String title) {
+        titleStr = title ;
+    }
+
+    public String getDesc() {
+        return this.descStr ;
+    }
+    public void setDesc(String desc) {
+        descStr = desc ;
+    }
+
+    public String getPriceStr() {
+        return  this.priceStr ;
+    }
+    public void setPriceStr(String price) {
+        priceStr=price ;
+    }
+```
+> iconDrawable은 이미지, title은 음료이름, desc은 카페이름, price는 가격
+
+> ListView의 아이템에 표시 될 데이터 클래스를 정의    
+> 이미지, 함수 아이템에 get/set 메소드를 만들어준다.
+
+
+#### listview_item.xml
+```java
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="149dp"
+            android:layout_height="80dp"
+            android:layout_weight="3" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="4">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textView1"
+                android:textSize="24dp"
+                android:textColor="#000000"
+                android:gravity="center_vertical"
+                android:layout_weight="2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textView2"
+                android:textSize="16dp"
+                android:textColor="#666666"
+                android:layout_weight="1" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textView3"
+                android:textSize="16dp"
+                android:textColor="#666666"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </LinearLayout>
+```
+
+> ListView 아이템에 대한 화면을 구성한다.
+
+
+
+#### ListViewAdapter.java
+
+Adapter가 필터링 기능을 사용할 수 있게 하기위한 필수조건은
+
+Filterable 인터페이스를 implements 해야한다.
+
+Filterable 인터페이스는 필터링 기능이 필요한 곳에서 사용된다.
+
+
+```java
+public class ListViewAdapter extends BaseAdapter implements Filterable {
+    // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
+    private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>();
+    // 필터링된 결과 데이터를 저장하기 위한 ArrayList
+    private ArrayList<ListViewItem> filteredItemList = listViewItemList;
+
+    Filter listFilter;
+
+
+    public ListViewAdapter() {
+    }
+```
+>  Filterable 인터페이스를 구현한다.    
+
+```java
+@Override
+    public int getCount() {
+        return filteredItemList.size();
+    }
+```
+> Adapter에 사용되는 데이터의 개수를 리턴한다.     
+
+```java
+@Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final int pos = position;
+        final Context context = parent.getContext();
+```
+> position에 위치한 데이터를 화면에 출력하는데 사용될 View를 리턴한다.     
+
+```java
+if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.listview_item, parent, false);
+        }
+```
+> listview_item.xml의 Layout을 inflate.    
+> inflate는 xml로 정의된 view를 객체화 시킨다는 뜻이다.
+
+
+```java
+        ImageView iconImageView = (ImageView) convertView.findViewById(R.id.imageView1) ;
+        TextView titleTextView = (TextView) convertView.findViewById(R.id.textView1) ;
+        TextView descTextView = (TextView) convertView.findViewById(R.id.textView2) ;
+        TextView pirceTextView = (TextView) convertView.findViewById(R.id.textView3) ;
+```
+> 화면에 표시될(Layout이 inflate된) View로 부터 위젯에 대한 참조를 획득한다.
+
+
+```java
+ListViewItem listViewItem = filteredItemList.get(position);
+```
+> filteredItemList에서 position에 위치한 데이터를 받아온다.
+
+
+```java
+iconImageView.setImageDrawable(listViewItem.getIcon());
+        titleTextView.setText(listViewItem.getTitle());
+        descTextView.setText(listViewItem.getDesc());
+        pirceTextView.setText(listViewItem.getPriceStr());
+
+        return convertView;
+    }
+```
+> 아이템 안에 데이터를 각 위젯에 반영한다.
+
+
+```java
+@Override
+    public long getItemId(int position) {
+        return position;
+    }
+```
+> 지정한 위치(position)에 있는 데이터와 관계된 아이템을 가져온다.
+
+
+```java
+@Override
+    public Object getItem(int position) {
+        return filteredItemList.get(position);
+    }
+```
+> 지정한 위치(position)에 있는 데이터를 받아온다.
+
+
+```java
+public void addItem(Drawable icon, String title, String desc, String price) {
+        ListViewItem item = new ListViewItem();
+
+        item.setIcon(icon);
+        item.setTitle(title);
+        item.setDesc(desc);
+        item.setPriceStr(price);
+
+        listViewItemList.add(item);
+    }
+```
+> 아이템 데이터를 추가하기 위해 함수를 추가한다.
+
+
+```java
+public Filter getFilter() {
+        if (listFilter == null) {
+            listFilter = new ListFilter();
+        }
+
+        return listFilter;
+    }
+```
+> 위에서 Filterable 인터페이스를 implements 했으므로, Filterable 인터페이스의   
+> getFilter() 함수를 오버라이드 한다.
+
+
+```java
+private class ListFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults() ;
+
+            if (constraint == null || constraint.length() == 0) {
+                results.values = listViewItemList ;
+                results.count = listViewItemList.size() ;
+            } else {
+                ArrayList<ListViewItem> itemList = new ArrayList<ListViewItem>() ;
+
+                for (ListViewItem item : listViewItemList) {
+
+                    if (item.getTitle().toUpperCase().contains(constraint.toString().toUpperCase()) ||
+                            item.getDesc().toUpperCase().contains(constraint.toString().toUpperCase()))
+                    {
+                        itemList.add(item) ;
+                    }
+                }
+
+                results.values = itemList ;
+                results.count = itemList.size() ;
+            }
+            return results;
+        }
+```
+> Filter클래스의 역할에 따라, 커스텀 Adapter 내부에 커스텀 Filter 클래스를 정의하고 구현한다.
+
+
+```java
+@Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredItemList=(ArrayList<ListViewItem>)results.values;
+
+            if(results.count>0){
+                notifyDataSetChanged();
+            }
+            else{
+                notifyDataSetInvalidated();
+            }
+        }
+    }
+}
+```
+> 이렇게 Adapter 클래스 구현 끝
+
+
+
+#### drink_search.xml
+```java
+<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26sp"
+        android:layout_marginRight="8dp"
+        android:id="@+id/textView1"
+        android:text="Filter Text" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/textView1"
+        android:id="@+id/editTextFilter"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/editTextFilter"
+        android:textFilterEnabled="true"
+        android:id="@+id/listview1"/>
+```
+> ListView의 "textFilterEnabled"속성을 "true"로 지정해줘야한다.    
+> 지정해줘야만 setFilterText() 함수를 사용해 필터링 기능을 사용할 수 있다.
+
+
+
+#### PersonFragment.java
+```java
+public class PersonFragment extends Fragment {
+    ListView listView=null;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.drink_search, container, false);
+
+        ListViewAdapter adapter;
+
+        //Adapter 생성
+        adapter=new ListViewAdapter();
+
+        //리스트뷰 참조 및 adapter 달기
+        listView=(ListView)view.findViewById(R.id.listview1);
+        listView.setAdapter(adapter);
+```
+> 위에서 정의한 Adapter를 생성하여 ListView에 지정하는 코드를 작성한다.
+
+
+> 작성 전에, 이미지 데이터를 추가해야 한다.   
+> ListView 아이템의 ImageView에 들어갈 이미지를 res > drawable에 추가한다.
