@@ -11,9 +11,11 @@
 ## 2.주차별 계획표
    
 
-## 3.코드    
-3-1. 홈 카테고리    
+## 3.기능 구현    
+3-1. 홈 카테고리   
+       - Google API   
 3-2. 프랜차이즈 카테고리    
+       - FireBase   
 3-3. 음료 카테고리     
 3-4. 검색 카테고리
 
@@ -82,6 +84,25 @@
 
 * JAVA   
 ![java_logo](https://user-images.githubusercontent.com/62926717/85363139-1a881a00-b55b-11ea-9d70-aeae08cfe0d0.png)
+
+
+***
+
+## 주차 별 프로젝트 계획표
+
+<img width="800" alt="grayshakeitya" src="https://user-images.githubusercontent.com/62926717/85366240-e6fcbe00-b561-11ea-90e5-f1587d0347d3.PNG">
+
+
+***
+
+
+## 코드
+
+
+### 
+
+
+***
 
 
 ### 하단버튼
