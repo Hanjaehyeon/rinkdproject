@@ -67,6 +67,23 @@
 
 
 ***
+
+### 개발 툴
+
+* 안드로이드 스튜디오
+![android_studio_logo](https://user-images.githubusercontent.com/62926717/85362786-5078ce80-b55a-11ea-85de-b7971ccfe7f2.png)
+
+
+* 파이어베이스   
+![firebase_logo](https://user-images.githubusercontent.com/62926717/85362928-ad748480-b55a-11ea-96a2-cbc86549d3fb.jpg)
+
+
+### 개발 언어
+
+* JAVA   
+![java_logo](https://user-images.githubusercontent.com/62926717/85363139-1a881a00-b55b-11ea-9d70-aeae08cfe0d0.png)
+
+
 ### 하단버튼
 
 
