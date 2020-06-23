@@ -575,8 +575,6 @@ public interface OnCafeItemClickListener {
 ***
 
 
-### 음료 카테고리
-
 #### Firebase 연결
 
 1. build.gradle > Moduel:app에 다음 코드를 추가하고 Sync한다.
@@ -648,6 +646,755 @@ annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 17. 파일을 클릭하면 사진의 이미지와 주소를 불러올 수 있다.
 <img width="800" alt="firebase23" src="https://user-images.githubusercontent.com/62926717/85386608-c858f000-b57e-11ea-8c36-28d740e802fe.PNG">
 
+
+18. 파일 위치에서 엑세스 토큰을 클릭하면 이미지의 주소를 받아온다.
+<img width="400" alt="firebase24" src="https://user-images.githubusercontent.com/62926717/85386910-24237900-b57f-11ea-9b70-c62c567cc5c6.PNG">
+
+
+19. 다음과 같이 이미지 주소를 넣으면 이미지 주소를 불러올 수 있다.
+<img width="400" alt="firebase25" src="https://user-images.githubusercontent.com/62926717/85387128-66e55100-b57f-11ea-8e52-6d849b31d1e4.PNG">
+
+***
+
+
+### 음료 카테고리
+
+
+#### DrinkFragment.java
+
+* 가장 큰 틀로 DrinkFragment 파일에 TabLayout을 사용하여 ICE/HOT 탭을 생성한다.    
+* addTab을 사용해 두 개의 탭을 생성한다.    
+* xml에서 만든 탭 레이아웃에 대한 view를 참조해준다.
+
+* Viewpager를 사용하여 각 탭에 해당하는 Fragment를 띄운다.   
+* Viewpager를 사용하면 스크롤로 화면을 좌,우로 넘김이 가능하다.   
+
+* adapter 객체를 만들어 Viewpager와 연결한다. (*adapter 관련 설명 이하 기록*)
+* pageOnchangeListener를 등록해준다.
+```java
+public class DrinkFragment extends Fragment {
+    private ViewPager mViewPager;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_drink, container, false);
+        mViewPager  =(ViewPager)view.findViewById(R.id.viewPager);
+
+        //tablayout을 설정해준다
+        // ICE와 HOT 두가지 탭을 생성해주었다.
+        TabLayout tabLayout = (TabLayout)view.findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("ICE"));
+        tabLayout.addTab(tabLayout.newTab().setText("HOT"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        //Viewpager객체를 만들어서 xml파일의 viewpager 레이아웃을 가져온다.
+        //Adapter 객체를 만들어서 viewpager 와 연결해준다.
+        final ViewPager viewpager =(ViewPager)view.findViewById(R.id.viewPager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getChildFragmentManager(),tabLayout.getTabCount());
+        viewpager.setAdapter(adapter);
+        viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab){
+                viewpager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public  void onTabUnselected(TabLayout.Tab tab){
+
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+
+        });
+
+        return view;
+    }
+```
+
+
+* Adapter를 생성하여 각 탭에 프래그먼트를 연결한다.    
+* 이때 클래스는 FragmentPagerAdapter를 상속받는다.   
+* 사용할 탭의 갯수에 맞춰 Fragment 파일을 생성한다.   
+* 탭에 position을 받아와 switch문을 사용해 각 탭에 Fragment를 리턴해준다.
+```java
+ private class PagerAdapter extends FragmentPagerAdapter{
+        int mNumOfTabs;
+
+        public PagerAdapter(FragmentManager fm, int NumOfTabs){
+            super(fm);
+            this.mNumOfTabs=NumOfTabs;
+        }
+        //getItem메서드를 생성하여 해당 프래그먼트를 각각의 tab화면에 표시하도록 해준다.
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+                    FirstFragment tab1 = new FirstFragment();
+                    return tab1;
+                case 1:
+                    SecondFragment tab2 = new SecondFragment();
+                    return tab2;
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return mNumOfTabs;
+        }
+```
+
+
+
+#### FirstFragment.java
+
+* ICE탭을 눌렀을 때 화면에 나타나는 화면을 위한 Fragment이다. (*SecondFragment.java 파일도 이와 같다.*)      
+* 이 화면에서는 ExpandableListView를 사용하여 부모 리스트에 속한 자식 리스트를 만들어주어
+
+많은 카테고리를 접었다 펼 수 있는 기능을 사용한다.
+
+* 부모,자식 메뉴들을 담아줄 List들을 각각 선언한 후, 부모 리스트에 들어갈 요소들을 추가한다.   
+* 이때 List는 HashMap 클래스를 사용한다.   
+* 요소들을 하나의 그룹으로 묶어 해당 요소들의 텍스트를 적어준다.   
+* 앞서 선언해준 부모 리스트에 생성한 그룹 요소들을 저장한다.    
+
+
+```java
+public class FirstFragment extends Fragment {
+    private RecyclerView recyclerview;
+    ExpandableListView listMain;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.tab_fistfragment, container, false);
+
+        //부모 리스트와 자식 리스트를 선언해준다.
+        ArrayList<HashMap<String,String>> groupData = new ArrayList<>();
+        ArrayList<ArrayList<HashMap<String,String>>> childData = new ArrayList<>();
+
+        //부모 리스트에 들어갈 요소들을 추가해준다.
+        HashMap<String,String> groupA = new HashMap<>();
+        groupA.put("group","COFFEE");
+        HashMap<String,String> groupB = new HashMap<>();
+        groupB.put("group","BEVERAGE");
+        HashMap<String,String> groupC = new HashMap<>();
+        groupC.put("group","TEA");
+        HashMap<String,String> groupD = new HashMap<>();
+        groupD.put("group","SMOOTHIE & FRAPPE");
+        HashMap<String,String> groupE = new HashMap<>();
+        groupE.put("group","ADE & JUICE");
+        HashMap<String,String> groupF = new HashMap<>();
+        groupF.put("group","BUBBLE TEA");
+
+        groupData.add(groupA);
+        groupData.add(groupB);
+        groupData.add(groupC);
+        groupData.add(groupD);
+        groupData.add(groupE);
+        groupData.add(groupF);
+```
+
+
+* 부모 요소들을 선언했다면 자식 리스트에 들어갈 요소를 추가한다.      
+* 자식 요소들 또한 HashMap을 사용하며 부모 그룹명과 자식 요소 각각의 이름을 저장한다.    
+* 요소들을 하나의 그룹으로 묶어 해당 요소들의 텍스트를 적어준다.   
+* 아래의 코드는 하나의 부모 자식 리스트를 예로 든 것이다.
+```java
+ ArrayList<HashMap<String,String>>childListA = new ArrayList<>();
+
+        HashMap<String,String> childAA = new HashMap<>();
+        childAA.put("group","COFFEE");
+        childAA.put("name", "아메리카노");
+        childListA.add(childAA);
+
+        HashMap<String,String> childAB = new HashMap<>();
+        childAB.put("group","COFFEE");
+        childAB.put("name", "카페라떼");
+        childListA.add(childAB);
+
+        HashMap<String,String> childAC = new HashMap<>();
+        childAC.put("group","COFFEE");
+        childAC.put("name", "카페모카");
+        childListA.add(childAC);
+
+        HashMap<String,String> childAD = new HashMap<>();
+        childAD.put("group","COFFEE");
+        childAD.put("name", "바닐라라떼");
+        childListA.add(childAD);
+
+        HashMap<String,String> childAE = new HashMap<>();
+        childAE.put("group","COFFEE");
+        childAE.put("name", "카라멜 마끼아또");
+        childListA.add(childAE);
+
+        HashMap<String,String> childAF = new HashMap<>();
+        childAF.put("group","COFFEE");
+        childAF.put("name", "카푸치노");
+        childListA.add(childAF);
+
+        HashMap<String,String> childAO = new HashMap<>();
+        childAO.put("group","COFFEE");
+        childAO.put("name", "아인슈패너");
+        childListA.add(childAO);
+
+        HashMap<String,String> childAJ = new HashMap<>();
+        childAJ.put("group","COFFEE");
+        childAJ.put("name", "아포가토");
+        childListA.add(childAJ);
+
+        HashMap<String,String> childAL= new HashMap<>();
+        childAL.put("group","COFFEE");
+        childAL.put("name", "디카페인");
+        childListA.add(childAL);
+
+
+        childData.add(childListA);
+```
+
+* 자식 요소 뷰 를 클릭하면 해당 음료 Activity로 전환하는 Listener를 생성한다.   
+* 이때 GroupPosition 별로 switch문을 작성한다.   
+* 작성한 부모 그룹 요소를 바탕으로 음료별 Activity를 생성한다.
+![image](https://user-images.githubusercontent.com/62926717/85389919-0ce68a80-b583-11ea-89f9-68bb15adbf85.png)
+
+
+* 클래스 내부에 어댑터를 생성한 후 ExpandableListView에 어댑터를 설정한다.
+```java
+SimpleExpandableListAdapter adapter  = new SimpleExpandableListAdapter(
+                getContext(), groupData,android.R.layout.simple_expandable_list_item_1,
+                new String[] {"group"},new int[] {android.R.id.text1},
+                childData, android.R.layout.simple_expandable_list_item_2,new String[] {"name","group"},new int[]
+                {android.R.id.text1,android.R.id.text2});
+
+        //ExpandableListView에 생성한 Adapter를 설정한다.
+        ExpandableListView listView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+        listView.setAdapter(adapter);
+```
+
+
+```
+아메리카노 Activity를 대표적으로 살펴보자면
+```
+
+
+* 아메리카노 Activity 안에서도 아메리카노와 콜드브루를 나누어준다.   
+* 예를 들어, 과일라떼 Activity로 본다면 '딸기','사과','복숭아' 등 과일의 종류별로 Fragment를 만들어준다.    
+* TabLayout을 생성해 Viewpager로 나타낸다.   
+![image](https://user-images.githubusercontent.com/62926717/85390148-5afb8e00-b583-11ea-8f17-1356168b2fe3.png)
+
+
+#### AmericanoIceActivity.java
+
+* 필요한 객체들을 선언한다.   
+* 이때 이미지와 텍스트들은 리사이클러뷰로 나타낼 것이며,
+
+이 데이터들을 Firebase에 저장된 데이터들을 불러와 저장한다.    
+```java
+public class AmericanoIceActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<Drink> arrayList;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+
+    TextView textView;
+
+    private ViewPager viewPager;
+```
+
+
+* 두 개의 탭, Viewpager를 생성한다.   
+* 위에서 설명했듯이 만들고자 하는 Activity안에 세부적으로 음료 종류를 나눠야 한다면
+
+종류별 개수만큼 탭을 생성해준다.
+```java
+protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_drink);
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+
+        tabLayout.addTab(tabLayout.newTab().setText("아메리카노"));
+        tabLayout.addTab(tabLayout.newTab().setText("콜드브루"));
+
+        tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
+
+        final ViewPager viewpager = (ViewPager) findViewById(R.id.viewPager);
+        final AmericanoIceActivity.PagerAdapter adapter = new AmericanoIceActivity.PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewpager.setAdapter(adapter);
+        viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewpager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+
+        });
+    }
+```
+
+```java
+private class PagerAdapter extends FragmentPagerAdapter {
+        int mNumOfTabs;
+
+        public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+            super(fm);
+            this.mNumOfTabs = NumOfTabs;
+        }
+
+        //getItem메서드를 생성하여 해당 프래그먼트를 각각의 tab화면에 표시하도록 해준다.
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+                    AmericanoFragment tab1 = new AmericanoFragment();
+                    return tab1;
+                case 1:
+                    AmeColdbrewFragment tab2 = new AmeColdbrewFragment();
+                    return tab2;
+                default:
+                    return null;
+            }
+        }
+
+
+        @Override
+        public int getCount() {
+            return mNumOfTabs;
+        }
+```
+* 어댑터를 생성하고 각각의 탭에 아메리카노, 콜드브루 Fragment를 연결한다.   
+* 이 탭에 연결될 Fragment들은 모든 카페의 음료들을 가격순으로 띄워주는 화면이다.   
+* 음료 정보들은 Firebase에서 받아올 것이므로 그 이전에   
+
+#### Drink.java
+#### DrinkAdapter.java
+
+* 이 두가지의 클래스를 생성한다.
+
+
+
+#### Drink.java
+* Drink 클래스에는 필요한 정보를 받아줄 수 있는 객체를 선언한다.   
+* 이미지, 카페 매장명, 음료 이름, 가격 객체를 생성한다.   
+* 가격은 price, textprice 두 가지 이다.
+
+* price : 반환형은 int. 숫자를 받아와 올림차순으로 정렬하기 위한 변수   
+* textprice : 반환형은 string으로 문자열을 받아와 가격을 textview로 나타내기 위한 변수
+
+
+```java
+public class Drink {
+    private String image;
+    private String cafename;
+    private String drinkname;
+    private int price;
+    private String textprice;
+
+    public Drink(){}
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getCafename() {
+        return cafename;
+    }
+
+    public void setCafename(String cafename) {
+        this.cafename = cafename;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public String getDrinkname(){
+        return drinkname;
+    }
+
+    public void setDrinkname(String drinkname){
+        this.drinkname = drinkname;
+    }
+
+    public String getTextprice() {return textprice;}
+    public void setTextprice(String textprice){this.textprice = textprice;}
+
+}
+```
+
+#### DrinkAdapter.java
+
+* Drink객체를 담을 리스트를 선언한다.   
+* LayoutInflater를 사용해서 recyclerview로 띄울 아이템 레이아웃 파일을 참조한다.
+
+```java
+public class DrinkAdapter extends RecyclerView.Adapter<DrinkAdapter.CustomViewHolder> {
+
+    private ArrayList<Drink> arrayList;
+    private Context context;
+
+    public DrinkAdapter(ArrayList<Drink> arrayList, Context context) {
+        this.arrayList = arrayList;
+        this.context = context;
+    }
+
+    @NonNull
+    @Override
+    public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.drink_item,parent,false);
+        CustomViewHolder holder = new CustomViewHolder(view);
+
+        return holder;
+    }
+```
+
+
+* 어댑터를 통해 만들어진 객체들을 리스트에 저장하고 ViewHolder에 저장한다.   
+* 이미지뷰는 Glide를 사용하여 저장한다.   
+```java
+public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+        Glide.with(holder.itemView)
+                .load(arrayList.get(position).getImage())
+                .into(holder.imageView);
+        holder.tv_name.setText(arrayList.get(position).getCafename());
+        holder.tv_price.setText(String.valueOf(arrayList.get(position).getPrice()));
+        holder.tv_drinkname.setText(arrayList.get(position).getDrinkname());
+        holder.tv_textprice.setText(arrayList.get(position).getTextprice());
+        //  holder.zzim.setText(arrayList.get(position).getFav());
+    }
+```
+
+* gradle:app에 다음 코드를 추가한다.
+```
+implementation 'com.github.bumptech.glide:glide:4.10.0'
+annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+```
+
+
+* price는 int 반환형으로 변수를 받아왔기 때문에 String.valueOf를 사용한다.   
+* imageview와 textview 객체를 선언하고 각각의 레이아웃 view를 참조한다.
+```java
+public int getItemCount() {
+        return (arrayList != null ? arrayList.size() :0);
+    }
+
+    public static class CustomViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        TextView tv_name;
+        TextView tv_price;
+        TextView tv_drinkname;
+        TextView tv_textprice;
+        // Button zzim;
+
+        public CustomViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            this.imageView = itemView.findViewById(R.id.image_drink);
+            this.tv_name = itemView.findViewById(R.id.textView_name);
+            this.tv_price = itemView.findViewById(R.id.textView_price);
+            this.tv_textprice = itemView.findViewById(R.id.textView_price);
+            this.tv_drinkname = itemView.findViewById(R.id.textView_drinkname);
+            // this.zzim = itemView.findViewById(R.id.zzim);
+
+        }
+
+    }
+```
+
+
+
+#### AmericanoFragment.java
+
+* 필요한 객체들을 선언한다.   
+* Firebase의 DB를 선언한다.
+```java
+public class AmericanoFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<Drink> arrayList;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+
+    TextView textView;
+    Query query;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+```
+
+
+* 한 줄에 3개의 아이템을 띄울 것이기 때문에 GridLayoutManager를 사용해 spanCount를 3으로 설정해준다.
+```java
+public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_caffe_latte_all, container, false);
+
+        recyclerView = view.findViewById(R.id.drink_recyclerview);
+        recyclerView.setHasFixedSize(true);//리사이클러뷰 성능 강화
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        arrayList = new ArrayList<>(); //Drink 객체를 담을 리스트
+
+        database = FirebaseDatabase.getInstance();
+
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        recyclerView.setLayoutManager(layoutManager);
+```
+
+
+* Query를 사용하여 데이터베이스의 특정 부분에 대한 데이터만 불러온다.   
+* "Americano"테이블의 자식 테이블인 "Ame"테이블의 데이터들을 price값에 따라 올림차순으로 정렬한다.   
+* - onDataChange() 메서드에서 Drink 클래스 객체의 데이터를 받아 저장한다.   
+* - DrinkAdapter 객체를 선언하고 리사이클러뷰에 adapter를 저장한다.   
+* orderBychild() 메서드는 지정된 하위 키 또는 중첩된 하위 경로의 값에 따라 경과를 정렬하는 데이터 정렬 메서드이다.   
+* 버튼을 하나 생성하여 “가격순”으로 음료들을 나열함 -> PopupMenu를 설정해 메뉴버튼으로 만들어준다.
+```java
+ query =FirebaseDatabase.getInstance().getReference().child("Americano").child("Ame").orderByChild("price");
+        // databaseReference = database.getReference("Latte");//DB 테이블 연결
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // 파이어베이스 데이터베이스의 데이터를 받아옴
+                arrayList.clear(); //기존 배열 초기화
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Drink drink = snapshot.getValue(Drink.class);//드링크 객체의 데이터를 담는다.
+                    arrayList.add(drink);
+                }
+                adapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // db가져오던 중 에러 발생 시
+                Log.e("CaffeLatteAllFragment", String.valueOf(databaseError.toException()));
+
+            }
+        });
+
+        adapter = new DrinkAdapter(arrayList, getContext());
+        recyclerView.setAdapter(adapter); //리사이클러뷰에 어댑터 연결
+```
+
+
+* menu 레이아웃을 하나 생성하고 팝업메뉴에 들어갈 아이템들을 만든다.   
+* inflater를 사용하여 생성한 레이아웃을 참조한다.
+```java
+final Button btn = (Button)view.findViewById(R.id.listbutton);
+
+        btn.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v){
+                PopupMenu popup = new PopupMenu(getContext(),v);
+
+                popup.getMenuInflater().inflate(R.menu.pricelist_option,popup.getMenu());
+```
+
+
+* 팝업메뉴 버튼에 ClickEvent를 달고 버튼이 눌렸을 시 query를 사용해
+
+원하는 테이블의 데이터들을 가격순으로 정렬하도록 한다.   
+```java
+popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu1:
+                                btn.setText("가격순");
+                                query =FirebaseDatabase.getInstance().getReference().child("Americano").child("Ame").orderByChild("price");
+                                // adapter.notifyDataSetChanged();
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        // 파이어베이스 데이터베이스의 데이터를 받아옴
+                                        arrayList.clear(); //기존 배열 초기화
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            Drink drink = snapshot.getValue(Drink.class);//드링크 객체의 데이터를 담는다.
+                                            arrayList.add(drink);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        // db가져오던 중 에러 발생 시
+                                        Log.e("CafeLatteActivity", String.valueOf(databaseError.toException()));
+                                    }
+                                });
+                                adapter = new DrinkAdapter(arrayList, getContext());
+                                recyclerView.setAdapter(adapter); //리사이클러뷰에 어댑터 연결
+                                break;
+                            default:
+                                break;
+                        }
+
+                        return false;
+                    }
+                });
+                popup.show();
+            }
+        });
+```
+
+
+* Firebase에서 콜드브루 테이블의 데이터만 받아오는 query이다.
+```java
+query =FirebaseDatabase.getInstance().getReference().child("Americano").child("Coldbrew").orderByChild("price");
+```
+
+
+
+#### activity_drink.xml
+* 음료 종류를 표시해주는 탭 레이아웃과 Viewpager를 설정해준다.
+```java
+ <HorizontalScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        >
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabIndicatorAnimationDuration="300">
+
+        </com.google.android.material.tabs.TabLayout>
+
+
+    </HorizontalScrollView>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id='@+id/viewPager'
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+```
+
+* 이 Viewpager에는 음료 아이템들을 띄운다.
+
+
+![image](https://user-images.githubusercontent.com/62926717/85392448-803dcb80-b586-11ea-9386-80f486ff0a16.png)
+
+![image](https://user-images.githubusercontent.com/62926717/85392464-86cc4300-b586-11ea-9ce6-a4ca3994a656.png)
+
+
+
+#### drink_item.xml
+* 음료 아이템을 띄우며 이미지, 카페이름, 음료이름, 가격을 띄우는 ImageView와 TextView들이 있다.   
+* 이미지는 CardView 안에 정의한다.   
+* 전체적인 레이아웃은 LinearLayout으로 정의한다.
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="4dp">
+
+            <ImageView
+                android:id="@+id/image_drink"
+                android:layout_width="120dp"
+                android:layout_gravity="center"
+                android:layout_height="120dp"
+                />
+
+        </androidx.cardview.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="11dp"
+                android:textColor="#000099"
+                android:gravity="start"
+                android:layout_gravity="left"
+                />
+
+            <TextView
+                android:id="@+id/textView_drinkname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:layout_gravity="left"
+                />
+
+            <TextView
+                android:id="@+id/textView_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:layout_gravity="left"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+```
+
+
+![image](https://user-images.githubusercontent.com/62926717/85392654-ce52cf00-b586-11ea-99f3-7914685f8207.png)
+
+![image](https://user-images.githubusercontent.com/62926717/85392678-d743a080-b586-11ea-8354-087c8e6aeedf.png)
 
 
 
