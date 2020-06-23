@@ -15,8 +15,8 @@
 3-1. 홈 카테고리   
        - Google API   
 3-2. 프랜차이즈 카테고리    
-       - FireBase   
-3-3. 음료 카테고리     
+3-3. 음료 카테고리    
+       - FireBase    
 3-4. 검색 카테고리
 
 
@@ -181,7 +181,7 @@ https://webnautes.tistory.com/647
 
 
 
-#### 홈 카테고리 - 하단버튼
+#### 하단버튼 만들기
 
 ##### bottom_nav_menu.xml
 
@@ -569,6 +569,68 @@ public interface OnCafeItemClickListener {
 
     </FrameLayout>
 ```
+
+
+
+***
+
+
+### 음료 카테고리
+
+#### Firebase 연결
+
+1. build.gradle > Moduel:app에 다음 코드를 추가하고 Sync한다.
+```
+implementation 'com.google.firebase:firebase-database:19.3.1'
+implementation 'com.google.firebase:firebase-storage:19.1.1'
+implementation 'com.firebaseui:firebase-ui-storage:3.2.2'
+implementation 'com.github.bumptech.glide:glide:4.10.0'
+annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+```
+
+2. 안드로이드 스튜디오에서 상단바에 있는 Tools을 선택하고 Firebase를 클릭한다.
+<img width="600" alt="firebase2" src="https://user-images.githubusercontent.com/62926717/85379095-567ca880-b576-11ea-8825-dafc6c9bc30b.PNG">
+
+3. Firebase assistant창 에서 firebase와 연동하기 위해 'Realtime Database'를 선택하고 Save and retrieve data를 클릭한다.
+<img width="600" alt="firebase3" src="https://user-images.githubusercontent.com/62926717/85379925-474a2a80-b577-11ea-8652-93f7f065d86a.PNG">
+
+
+4. 1,2번 둘 다 연결이 되지않은 상태이므로 차례대로 1번 'Connect to Firebase'를 클릭한다.
+<img width="600" alt="firebase4" src="https://user-images.githubusercontent.com/62926717/85380786-4a91e600-b578-11ea-8cbd-bc41b7a8c97d.PNG">
+
+
+5. Connect to Firebase를 클릭한다.
+<img width="600" alt="firebase5" src="https://user-images.githubusercontent.com/62926717/85384197-dce7b900-b57b-11ea-8779-73b25c7c364c.PNG">
+
+
+6. 잠깐의 시간이 지나면 1번이 연결되는데 성공한다.
+<img width="600" alt="firebase7" src="https://user-images.githubusercontent.com/62926717/85384335-03a5ef80-b57c-11ea-99da-6a5b600fd243.PNG">
+
+
+7. 2번도 눌러서 마저 연결해준다.
+<img width="600" alt="firebase8" src="https://user-images.githubusercontent.com/62926717/85384534-3354f780-b57c-11ea-969a-8fe2f5f3a9ea.PNG">
+
+
+8. 1,2번 모두 사진처럼 성공적으로 연결이 되었다면
+<img width="600" alt="firebase9" src="https://user-images.githubusercontent.com/62926717/85384834-8169fb00-b57c-11ea-9bc1-858ba3fd2c04.PNG">
+
+
+9. 검색창에 '구글 파이어베이스 콘솔'을 검색하고 사이트에 접속한다.
+<img width="600" alt="firebase10" src="https://user-images.githubusercontent.com/62926717/85384968-b5452080-b57c-11ea-851e-e782d4696e57.PNG">
+
+
+10. 파이어베이스에 연결한 프로젝트 명으로 들어간다.
+<img width="600" alt="firebase11" src="https://user-images.githubusercontent.com/62926717/85385169-f0dfea80-b57c-11ea-8780-dcfaf2c6be3f.PNG">
+
+
+11. Database를 클릭한다.
+<img width="300" alt="firebase12" src="https://user-images.githubusercontent.com/62926717/85385220-005f3380-b57d-11ea-8b51-73c680cee9a7.PNG">
+
+12. '데이터베이스 만들기'를 클릭, 테스터 모드로 시작하고 '사용 설정'을 클릭한다.
+<img width="600" alt="firebase14" src="https://user-images.githubusercontent.com/62926717/85385644-854a4d00-b57d-11ea-814c-3e3b2158bc97.PNG">
+
+13. 파이어베이스에 (예시)다음 사진과 같이 DB를 추가한다.
+<img width="600" alt="firebase15" src="https://user-images.githubusercontent.com/62926717/85385794-add24700-b57d-11ea-9ca4-71ca1e009fcb.PNG">
 
 
 ***
