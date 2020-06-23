@@ -99,7 +99,90 @@
 ## 코드
 
 
-### 
+### 홈 카테고리
+
+#### Google API키 발급받기
+
+<https://console.developers.google.com/apis/dashboard?project=rinkd-281206&folder=&organizationId=>
+
+프로젝트 이름을 정하고 생성한 뒤, 위의 링크로 접속하여 구글API키를 발급 받아야한다.
+
+
+1. 프로젝트 만들기를 클릭한다.     
+<img width="746" alt="googleApi1-1" src="https://user-images.githubusercontent.com/62926717/85369303-d7807380-b567-11ea-8697-bea73517731c.png">    
+
+
+2. 원하는 프로젝트 이름을 작성한 뒤, '만들기'를 클릭한다.      
+<img width="654" alt="googleApi2" src="https://user-images.githubusercontent.com/62926717/85369449-17dff180-b568-11ea-8f35-ad9b2d2fc2af.PNG">     
+
+
+3. 생성된 프로젝트에서 'API 및 서비스 사용 설정'을 클릭한다.     
+<img width="634" alt="googleApi3-1" src="https://user-images.githubusercontent.com/62926717/85369614-5d042380-b568-11ea-8956-c816042a6ee8.png">     
+
+
+4. 검색창에 'google maps android'를 검색하고 Maps SDK for Android를 클릭한다.     
+<img width="723" alt="googleApi5" src="https://user-images.githubusercontent.com/62926717/85369778-b1a79e80-b568-11ea-95d0-64c75aefa19e.PNG">     
+
+
+
+5. '사용'을 클릭해 활성화한다.     
+<img width="481" alt="googleApi6" src="https://user-images.githubusercontent.com/62926717/85369913-e9aee180-b568-11ea-8503-af16d7e35101.PNG">      
+
+
+6. 인증 설정을 위해 '사용자 인증 정보 만들기'를 클릭한다.     
+<img width="656" alt="googleApi8-1" src="https://user-images.githubusercontent.com/62926717/85370431-ad2fb580-b569-11ea-92ce-eb90c222c825.png">
+
+
+7. 앞에서 생성된 API 키에 사용 제한을 둘 수 있는 웹페이지에서 '키 제한'을 클릭한다.
+<img width="394" alt="googleApi9-1" src="https://user-images.githubusercontent.com/62926717/85370603-e8ca7f80-b569-11ea-94e8-8bc40c55cd84.png">
+
+
+8. 애플리케이션 제한사항에서 'Android앱'을 선택한다.    
+<img width="274" alt="googleApi10" src="https://user-images.githubusercontent.com/62926717/85370657-00096d00-b56a-11ea-94bb-7871f80edef5.PNG">
+
+
+9. 여기서, 패키지 이름과 SHA-1 인증서 지문을 필요로 하는데   패키지 이름은 현재 만든 프로젝트의 MainActivity.java의 프로젝트를 말한다.     
+<img width="264" alt="googleApi11" src="https://user-images.githubusercontent.com/62926717/85370772-31823880-b56a-11ea-884f-b2c886530f04.PNG">
+
+
+10. SHA-1 인증서 지문을 받아오기 위해
+
+윈도우 키 + R을 눌러 cmd을 입력하고 명령 프롬프트 창을 불러온다.    
+<img width="300" alt="googleApi12" src="https://user-images.githubusercontent.com/62926717/85370892-668e8b00-b56a-11ea-83c6-74cca4a62e9b.PNG">
+
+
+11. 윈도우에서는 다음 명령으로 SHA-1 인증서 지문을 획득할 수 있다.    
+
+```
+"C:\Program Files\Android\Android Studio\jre\bin\keytool" -list -v -keystore "%USERPROFILE%\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
+```
+
+
+12. 사진에서 하얗게 표시한 부분인 SHA-1 옆에 있는 문자열을 복사한다.    
+<img width="850" alt="googleApi13" src="https://user-images.githubusercontent.com/62926717/85371413-28de3200-b56b-11ea-9390-b0707cbf2362.PNG">
+
+
+13. '완료'를 클릭한 뒤 '저장'을 클릭해준다.    
+<img width="251" alt="googleApi14 완료 누르고 저장" src="https://user-images.githubusercontent.com/62926717/85371538-57f4a380-b56b-11ea-889c-6bdb067cf6ca.PNG">
+
+
+14. Place API를 사용하는 경우에도 똑같은 방법으로 방금 복사한 SHA-1의 문자열을 입력하고 저장해준다.
+
+
+15. 그리고 마지막으로 AndroidManifest.xml 파일에서 다음과 같이 코드를 추가한다.
+```
+<meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="API 키"/>
+```
+
+
+출처 : 멈춤보단 천천히라도      
+https://webnautes.tistory.com/647
+
+***
+
+본격적으로 차근차근히 코드를 구현해보자.
 
 
 ***
@@ -107,16 +190,18 @@
 
 ### 하단버튼
 
-
-
 ##### bottom_nav_menu.xml
+
+
+* bottom navigation을 사용한다.
+* menu 레이아웃에서 사용할 갯수만큼 item을 추가한다.
 ```java
 <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_white"
         android:title="@string/title_home" />
 ```
-> bottom navigation 사용 -> menu 레이아웃에서 사용할 갯수만큼 item 추가
+
 
 
 
